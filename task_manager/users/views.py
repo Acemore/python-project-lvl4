@@ -32,7 +32,11 @@ class UserCreationView(SuccessMessageMixin, CreateView):
     success_message = SUCCESS_USER_CREATION
 
 
-class UserDeletingView(CustomLoginRequiredMixin, SuccessMessageMixin, DeleteView):
+class UserDeletingView(
+    CustomLoginRequiredMixin,
+    SuccessMessageMixin,
+    DeleteView
+):
     model = User
     template_name = 'delete_user.html'
     success_url = reverse_lazy('users')
@@ -45,13 +49,17 @@ class UserDeletingView(CustomLoginRequiredMixin, SuccessMessageMixin, DeleteView
         return super().get(request, *args, **kwargs)
 
 
-class UserUpdatingView(CustomLoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class UserUpdatingView(
+    CustomLoginRequiredMixin,
+    SuccessMessageMixin,
+    UpdateView
+):
     model = User
     form_class = CreateUserForm
     template_name = 'update_user.html'
     success_url = reverse_lazy('users')
     success_message = SUCCESS_USER_UPDATING
-        
+
     def get(self, request, *args, **kwargs):
         if request.user != self.get_object():
             messages.error(self.request, NO_CHANGE_PERMISSION_MESSAGE)

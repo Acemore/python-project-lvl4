@@ -4,7 +4,9 @@ from django.shortcuts import redirect
 from django.utils.translation import gettext as _
 
 
-NOT_AUTHENTICATED_MESSAGE = _('Вы не авторизованы! Пожалуйста, выполните вход.')
+NOT_AUTHENTICATED_MESSAGE = (
+    _('Вы не авторизованы! Пожалуйста, выполните вход.')
+)
 
 
 class CustomLoginRequiredMixin(LoginRequiredMixin):
