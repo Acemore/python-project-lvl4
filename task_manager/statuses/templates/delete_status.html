@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+    <h1 class="my-4">
+        {% translate 'Удаление статуса' %}
+    </h1>
+
+    <form method="post">{% csrf_token %}
+        <p>
+            {% translate 'Вы уверены, что хотите удалить ' %}{{ status.name }}?
+        </p>
+        <button class="btn btn-primary btn-danger" type="submit">
+            {% translate 'Да, удалить' %}
+        </button>
+    </form>
+{% endblock %}

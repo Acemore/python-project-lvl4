@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% block content %}
+    <h1 class="my-4">
+        {% translate 'Статусы' %}
+    </h1>
+
+    <a class="nav-link" href="{% url 'create_status' %}">
+        {% translate 'Создать статус' %}
+    </a>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>{% translate 'Имя' %}</th>
+                <th>{% translate 'Дата создания' %}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for status in statuses %}
+                <tr>
+                    <td>{{ status.id }}</td>
+                    <td>{{ status.name }}</td>
+                    <td>{{ status.created_at }}</td>
+                    <td>
+                        <a href="{% url 'update_status' status.pk %}">{% translate 'Изменить' %}</a>
+                        <br>
+                        <a href="{% url 'delete_status' status.pk %}">{% translate 'Удалить' %}</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
