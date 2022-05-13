@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db.models import ProtectedError
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
@@ -16,6 +17,7 @@ NO_CHANGE_PERMISSION_MESSAGE = _(
 SUCCESS_USER_CREATION = _('Пользователь успешно зарегистрирован')
 SUCCESS_USER_DELETING = _('Пользователь успешно удалён')
 SUCCESS_USER_UPDATING = _('Пользователь успешно изменён')
+USER_IN_USE = _('Невозможно удалить пользователя, потому что он используется')
 
 
 class UserListView(ListView):
@@ -47,6 +49,13 @@ class UserDeletingView(
             messages.error(self.request, NO_CHANGE_PERMISSION_MESSAGE)
             return redirect('users')
         return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        try:
+            return super().post(request, *args, **kwargs)
+        except ProtectedError:
+            messages.error(self.request, USER_IN_USE)
+            return redirect(self.success_url)
 
 
 class UserUpdatingView(
