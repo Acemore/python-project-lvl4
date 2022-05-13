@@ -3,8 +3,10 @@ from django.urls import reverse
 
 from task_manager.statuses.models import Status
 from task_manager.statuses.views import (
-    SUCCESS_STATUS_CREATION, SUCCESS_STATUS_DELETING, SUCCESS_STATUS_UPDATING,
+    STATUS_IN_USE, SUCCESS_STATUS_CREATION,
+    SUCCESS_STATUS_DELETING, SUCCESS_STATUS_UPDATING,
 )
+from task_manager.tasks.models import Task
 from task_manager.users.models import User
 
 
@@ -19,15 +21,16 @@ STATUSES_LIST_URL = '/statuses/'
 UPDATED_STATUS_NAME = 'status4'
 
 
-# Create your tests here.
 class TestStatuses(TestCase):
-    fixtures = ["users.json", "statuses.json"]
+    fixtures = ["statuses.json", "tasks.json", "users.json"]
 
     def setUp(self):
         self.user = User.objects.get(pk=1)
 
         self.first_status = Status.objects.get(pk=1)
         self.second_status = Status.objects.get(pk=2)
+
+        self.task = Task.objects.get(pk=1)
 
     def test_statuses_list(self):
         self.client.force_login(self.user)
@@ -78,6 +81,7 @@ class TestStatuses(TestCase):
 
     def test_status_deleting(self):
         self.client.force_login(self.user)
+        self.task.delete()
 
         url = reverse(STATUS_DELETING, args=(self.first_status.pk,))
         resp = self.client.post(url, follow=True)
@@ -86,3 +90,13 @@ class TestStatuses(TestCase):
         self.assertContains(resp, SUCCESS_STATUS_DELETING)
         with self.assertRaises(Status.DoesNotExist):
             Status.objects.get(pk=self.first_status.pk)
+
+    def test_status_in_use_deleting(self):
+        self.client.force_login(self.user)
+
+        url = reverse(STATUS_DELETING, args=(self.first_status.pk,))
+        resp = self.client.post(url, follow=True)
+
+        self.assertRedirects(resp, STATUSES_LIST_URL)
+        self.assertContains(resp, STATUS_IN_USE)
+        self.assertTrue(Task.objects.filter(pk=self.first_status.pk).exists())
