@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% block content %}
+    <h1 class="my-4">
+        {% translate 'Просмотр задачи' %}
+    </h1>
+
+    <div class="card">
+        <div class="card-header bg-secondary text-white">
+            <h2>{{ task_details.name }}</h2>
+        </div>
+
+        <div class="card-body bg-light">
+            <p>{{ task_details.description }}</p>
+            <hr>
+            <div class="container">
+                <div class="row p-1">
+                    <div class="col">{% translate 'Автор' %}</div>
+                    <div class="col">{{ task_details.author }}</div>
+                </div>
+
+                <div class="row p-1">
+                    <div class="col">{% translate 'Исполнитель' %}</div>
+                    <div class="col">{{ task_details.executor }}</div>
+                </div>
+
+                <div class="row p-1">
+                    <div class="col">{% translate 'Статус' %}</div>
+                    <div class="col">{{ task_details.status }}</div>
+                </div>
+
+                <div class="row p-1">
+                    <div class="col">{% translate 'Дата создания' %}</div>
+                    <div class="col">{{ task_details.created_at }}</div>
+                </div>
+
+                <div class="row p-1">
+                    <div class="col">
+                        <a href="{% url 'update_task' task_details.pk %}">
+                            {% translate 'Изменить' %}
+                        </a>
+                        <br>
+                        <a href="{% url 'delete_task' task_details.pk %}">
+                            {% translate 'Удалить' %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
