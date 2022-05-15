@@ -1,9 +1,10 @@
+from django.contrib.messages import get_messages
 from django.test import TestCase
 from django.urls import reverse
 from django.utils.translation import gettext as _
 
 from .models import User
-from .views import USER_IN_USE
+from .views import NO_CHANGE_PERMISSION_MESSAGE, USER_IN_USE
 from task_manager.tasks.models import Task
 
 
@@ -20,7 +21,10 @@ USERS_LIST_URL = '/users/'
 
 
 class TestUsers(TestCase):
-    fixtures = ["users.json", "statuses.json", "tasks.json"]
+    fixtures = [
+        "labels.json", "statuses.json", "task_label_rel.json",
+        "tasks.json", "users.json"
+    ]
 
     def setUp(self):
         self.first_user = User.objects.get(pk=1)
@@ -58,7 +62,7 @@ class TestUsers(TestCase):
         user = self.first_user
         self.client.force_login(user)
 
-        url = reverse(USER_UPDATING, args=[user.id, ])
+        url = reverse(USER_UPDATING, args=(user.pk,))
         updated_user = {
             'first_name': user.first_name,
             'last_name': user.last_name,
@@ -73,6 +77,17 @@ class TestUsers(TestCase):
 
         changed_user = User.objects.get(username=user.username)
         self.assertTrue(changed_user.check_password('qpwoei1029389'))
+
+    def test_another_user_updating(self):
+        self.client.force_login(self.first_user)
+
+        url = reverse(USER_UPDATING, args=(self.second_user.pk,))
+        resp = self.client.get(url)
+
+        self.assertRedirects(resp, USERS_LIST_URL)
+
+        messages = list(get_messages(resp.wsgi_request))
+        self.assertEqual(str(messages[0]), NO_CHANGE_PERMISSION_MESSAGE)
 
     def test_user_deleting(self):
         self.client.force_login(self.first_user)
@@ -96,3 +111,14 @@ class TestUsers(TestCase):
         self.assertRedirects(resp, USERS_LIST_URL)
         self.assertContains(resp, USER_IN_USE)
         self.assertTrue(User.objects.filter(pk=self.first_user.pk).exists())
+
+    def test_another_user_deleting(self):
+        self.client.force_login(self.first_user)
+
+        url = reverse(USER_DELETING, args=(self.second_user.pk,))
+        resp = self.client.get(url)
+
+        self.assertRedirects(resp, USERS_LIST_URL)
+
+        messages = list(get_messages(resp.wsgi_request))
+        self.assertEqual(str(messages[0]), NO_CHANGE_PERMISSION_MESSAGE)
