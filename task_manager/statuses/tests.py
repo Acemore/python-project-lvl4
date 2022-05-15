@@ -22,7 +22,10 @@ UPDATED_STATUS_NAME = 'status4'
 
 
 class TestStatuses(TestCase):
-    fixtures = ["statuses.json", "tasks.json", "users.json"]
+    fixtures = [
+        "labels.json", "statuses.json", "task_label_rel.json",
+        "tasks.json", "users.json"
+    ]
 
     def setUp(self):
         self.user = User.objects.get(pk=1)
