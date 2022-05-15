@@ -16,21 +16,20 @@ NO_DELETE_PERMISSION_MESSAGE = _('Задачу может удалить тол�
 SUCCESS_TASK_CREATION = _('Задача успешно создана')
 SUCCESS_TASK_DELETING = _('Задача успешно удалена')
 SUCCESS_TASK_UPDATING = _('Задача успешно изменена')
+TASK_DETAILS = 'task_details'
+TASKS = 'tasks'
 
 
-class TasksListView(
-    CustomLoginRequiredMixin,
-    ListView
-):
+class TasksListView(CustomLoginRequiredMixin, ListView):
     model = Task
     template_name = 'tasks.html'
-    context_object_name = 'tasks'
+    context_object_name = TASKS
 
 
 class TaskDetailsView(CustomLoginRequiredMixin, DetailView):
     model = Task
     template_name = 'task_details.html'
-    context_object_name = 'task_details'
+    context_object_name = TASK_DETAILS
 
 
 class TaskCreationView(
@@ -41,7 +40,7 @@ class TaskCreationView(
     # model = Task
     form_class = TaskForm
     template_name = 'create_task.html'
-    success_url = reverse_lazy('tasks')
+    success_url = reverse_lazy(TASKS)
     success_message = SUCCESS_TASK_CREATION
 
     def form_valid(self, form):
@@ -57,7 +56,7 @@ class TaskUpdatingView(
     model = Task
     form_class = TaskForm
     template_name = 'update_task.html'
-    success_url = reverse_lazy('tasks')
+    success_url = reverse_lazy(TASKS)
     success_message = SUCCESS_TASK_UPDATING
 
 
@@ -68,11 +67,11 @@ class TaskDeletingView(
 ):
     model = Task
     template_name = 'delete_task.html'
-    success_url = reverse_lazy('tasks')
+    success_url = reverse_lazy(TASKS)
     success_message = SUCCESS_TASK_DELETING
 
     def get(self, request, *args, **kwargs):
         if request.user != self.get_object().author:
             messages.error(self.request, NO_DELETE_PERMISSION_MESSAGE)
-            return redirect('tasks')
+            return redirect(TASKS)
         return super().get(request, *args, **kwargs)
