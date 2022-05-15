@@ -12,10 +12,12 @@ class TaskForm(ModelForm):
             'description',
             'status',
             'executor',
+            'labels',
         ]
         labels = {
             'name': _('Имя'),
             'description': _('Описание'),
             'status': _('Статус'),
             'executor': _('Исполнитель'),
+            'labels': _('Метки'),
         }
