@@ -103,3 +103,42 @@ class TestTasks(TestCase):
         self.assertRedirects(resp, TASKS_LIST_URL)
         self.assertContains(resp, NO_DELETE_PERMISSION_MESSAGE)
         self.assertTrue(Task.objects.filter(pk=self.task1.pk).exists())
+
+    def test_filter_by_status(self):
+        self.client.force_login(self.user1)
+
+        filtered_list = f"{reverse(TASKS)}?status=1"
+        resp = self.client.get(filtered_list)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertQuerysetEqual(list(resp.context[TASKS]), [self.task1])
+
+    def test_filter_by_executor(self):
+        self.client.force_login(self.user1)
+
+        filtered_list = f"{reverse(TASKS)}?executor=1"
+        resp = self.client.get(filtered_list)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertQuerysetEqual(list(resp.context[TASKS]), [self.task2])
+
+    def test_filter_by_label(self):
+        self.client.force_login(self.user1)
+
+        filtered_list = f"{reverse(TASKS)}?labels=1"
+        resp = self.client.get(filtered_list)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertQuerysetEqual(
+            list(resp.context[TASKS]),
+            [self.task1, self.task2]
+        )
+
+    def test_filter_own_tasks(self):
+        self.client.force_login(self.user1)
+
+        filtered_list = f"{reverse(TASKS)}?own_tasks=on"
+        resp = self.client.get(filtered_list)
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertQuerysetEqual(list(resp.context[TASKS]), [self.task1])
