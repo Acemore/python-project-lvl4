@@ -3,11 +3,10 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
-from django.views.generic import (
-    CreateView, DeleteView, DetailView, ListView, UpdateView
-)
+from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
+from django_filters.views import FilterView
 
-from .forms import TaskForm
+from .forms import TaskFilter, TaskForm
 from .models import Task
 from task_manager.mixins import CustomLoginRequiredMixin
 
@@ -20,10 +19,11 @@ TASK_DETAILS = 'task_details'
 TASKS = 'tasks'
 
 
-class TasksListView(CustomLoginRequiredMixin, ListView):
+class TasksListView(CustomLoginRequiredMixin, FilterView):
     model = Task
     template_name = 'tasks.html'
     context_object_name = TASKS
+    filterset_class = TaskFilter
 
 
 class TaskDetailsView(CustomLoginRequiredMixin, DetailView):
