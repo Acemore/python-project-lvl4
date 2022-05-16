@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import dj_database_url
 import dotenv
 import os
+import rollbar
 from pathlib import Path
 
 
@@ -64,7 +65,16 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'rollbar.contrib.django.middleware.RollbarNotifierMiddleware',
 ]
+
+ROLLBAR = {
+     'access_token': os.getenv('ACCESS_TOKEN'),
+     'environment': 'development' if DEBUG else 'production',
+     'root': BASE_DIR,
+}
+
+rollbar.init(**ROLLBAR)
 
 ROOT_URLCONF = 'task_manager.urls'
 
