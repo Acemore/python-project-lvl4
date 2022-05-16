@@ -69,9 +69,9 @@ MIDDLEWARE = [
 ]
 
 ROLLBAR = {
-     'access_token': os.getenv('ACCESS_TOKEN'),
-     'environment': 'development' if DEBUG else 'production',
-     'root': BASE_DIR,
+    'access_token': os.getenv('ACCESS_TOKEN'),
+    'environment': 'development' if DEBUG else 'production',
+    'root': BASE_DIR,
 }
 
 rollbar.init(**ROLLBAR)

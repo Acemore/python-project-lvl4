@@ -12,8 +12,8 @@ from task_manager.users.models import User
 
 
 NO_CHANGE_PERMISSION_MESSAGE = _(
-        'У вас нет прав для изменения другого пользователя.',
-    )
+    'У вас нет прав для изменения другого пользователя.',
+)
 SUCCESS_USER_CREATION = _('Пользователь успешно зарегистрирован')
 SUCCESS_USER_DELETING = _('Пользователь успешно удалён')
 SUCCESS_USER_UPDATING = _('Пользователь успешно изменён')
