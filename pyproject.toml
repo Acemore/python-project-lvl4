@@ -1,8 +1,9 @@
 [tool.poetry]
 name = "hexlet-code"
 version = "0.1.0"
-description = ""
+description = "Task manager"
 authors = ["Sergey Martynov <acemore@mail.ru>"]
+repository = "https://github.com/Acemore/python-project-lvl4"
 packages = [
     { include = "task_manager" },
 ]
@@ -20,6 +21,7 @@ rollbar = "^0.16.2"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^4.0.1"
+coverage = "^6.3.3"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
