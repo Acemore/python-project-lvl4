@@ -1,5 +1,6 @@
+.coverage
 .env
 .venv/
 *.pyc
+coverage.xml
 db.sqlite3
-locale/
