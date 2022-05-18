@@ -1,0 +1,31 @@
+name: tests-and-linter-check
+
+on:
+  push:
+    branches: [ main ]
+  
+  workflow_dispatch:
+
+jobs:
+  tests-and-linter-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Install depenpencies
+        run: |
+          pip install poetry
+          poetry install
+                
+      - name: Run lint task
+        run: make lint
+
+      - name: Test & publish code coverage
+        uses: paambaati/codeclimate-action@v2.7.5
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        with:
+          coverageCommand: make test-coverage
+          debug: true
