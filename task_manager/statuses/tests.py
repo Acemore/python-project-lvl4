@@ -35,8 +35,9 @@ class TestStatuses(TestCase):
 
         self.task = Task.objects.get(pk=1)
 
-    def test_statuses_list(self):
         self.client.force_login(self.user)
+
+    def test_statuses_list(self):
         resp = self.client.get(reverse(STATUSES))
 
         self.assertEqual(resp.status_code, 200)
@@ -48,12 +49,12 @@ class TestStatuses(TestCase):
         )
 
     def test_statuses_list_without_login(self):
+        self.client.logout()
+
         resp = self.client.get(reverse(STATUSES))
         self.assertRedirects(resp, LOGIN_URL)
 
     def test_status_creation(self):
-        self.client.force_login(self.user)
-
         url = reverse(STATUS_CREATION)
         new_status = {
             NAME: NEW_STATUS_NAME,
@@ -67,8 +68,6 @@ class TestStatuses(TestCase):
         self.assertEqual(created_status.name, NEW_STATUS_NAME)
 
     def test_status_updating(self):
-        self.client.force_login(self.user)
-
         url = reverse(STATUS_UPDATING, args=(self.first_status.pk,))
         updated_status = {
             NAME: UPDATED_STATUS_NAME,
@@ -83,7 +82,6 @@ class TestStatuses(TestCase):
         )
 
     def test_status_deleting(self):
-        self.client.force_login(self.user)
         self.task.delete()
 
         url = reverse(STATUS_DELETING, args=(self.first_status.pk,))
@@ -95,8 +93,6 @@ class TestStatuses(TestCase):
             Status.objects.get(pk=self.first_status.pk)
 
     def test_status_in_use_deleting(self):
-        self.client.force_login(self.user)
-
         url = reverse(STATUS_DELETING, args=(self.first_status.pk,))
         resp = self.client.post(url, follow=True)
 

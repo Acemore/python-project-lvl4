@@ -30,7 +30,7 @@ class TestUsers(TestCase):
         self.first_user = User.objects.get(pk=1)
         self.second_user = User.objects.get(pk=2)
 
-        # self.task = Task.objects.get(pk=1)
+        self.client.force_login(self.first_user)
 
     def test_users_list(self):
         resp = self.client.get(reverse(USERS))
@@ -42,6 +42,8 @@ class TestUsers(TestCase):
         self.assertEqual(second_user.first_name, 'name2')
 
     def test_user_creation(self):
+        self.client.logout()
+
         url = reverse(USER_CREATION)
         new_user = {
             'first_name': 'name3',
@@ -60,7 +62,6 @@ class TestUsers(TestCase):
 
     def test_user_updating(self):
         user = self.first_user
-        self.client.force_login(user)
 
         url = reverse(USER_UPDATING, args=(user.pk,))
         updated_user = {
@@ -79,8 +80,6 @@ class TestUsers(TestCase):
         self.assertTrue(changed_user.check_password('qpwoei1029389'))
 
     def test_another_user_updating(self):
-        self.client.force_login(self.first_user)
-
         url = reverse(USER_UPDATING, args=(self.second_user.pk,))
         resp = self.client.get(url)
 
@@ -90,7 +89,6 @@ class TestUsers(TestCase):
         self.assertEqual(str(messages[0]), NO_CHANGE_PERMISSION_MESSAGE)
 
     def test_user_deleting(self):
-        self.client.force_login(self.first_user)
         Task.objects.all().delete()
 
         url = reverse(USER_DELETING, args=[self.first_user.id, ])
@@ -103,8 +101,6 @@ class TestUsers(TestCase):
             User.objects.get(pk=self.first_user.id)
 
     def test_user_in_use_deleting(self):
-        self.client.force_login(self.first_user)
-
         url = reverse(USER_DELETING, args=[self.first_user.pk, ])
         resp = self.client.post(url, follow=True)
 
@@ -113,8 +109,6 @@ class TestUsers(TestCase):
         self.assertTrue(User.objects.filter(pk=self.first_user.pk).exists())
 
     def test_another_user_deleting(self):
-        self.client.force_login(self.first_user)
-
         url = reverse(USER_DELETING, args=(self.second_user.pk,))
         resp = self.client.get(url)
 

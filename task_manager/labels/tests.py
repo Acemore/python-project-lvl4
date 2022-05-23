@@ -29,13 +29,11 @@ class TestLabels(TestCase):
         self.label1 = Label.objects.get(pk=1)
         self.label2 = Label.objects.get(pk=2)
 
-        # self.task = Task.objects.get(pk=1)
-
         self.user = User.objects.get(pk=1)
 
-    def test_labels_list(self):
         self.client.force_login(self.user)
 
+    def test_labels_list(self):
         url = reverse(LABELS)
         resp = self.client.get(url)
 
@@ -45,14 +43,14 @@ class TestLabels(TestCase):
         self.assertQuerysetEqual(labels_list, [self.label1, self.label2])
 
     def test_labels_list_without_login(self):
+        self.client.logout()
+
         url = reverse(LABELS)
         resp = self.client.get(url)
 
         self.assertRedirects(resp, LOGIN_URL)
 
     def test_label_creation(self):
-        self.client.force_login(self.user)
-
         url = reverse(LABEL_CREATION)
         new_label = {
             "name": "label3",
@@ -66,8 +64,6 @@ class TestLabels(TestCase):
         self.assertEqual(created_label.name, "label3")
 
     def test_label_updating(self):
-        self.client.force_login(self.user)
-
         url = reverse(LABEL_UPDATING, args=(self.label1.pk,))
         updated_label = {
             "name": "label4",
@@ -82,7 +78,6 @@ class TestLabels(TestCase):
         )
 
     def test_label_deleting(self):
-        self.client.force_login(self.user)
         Task.objects.all().delete()
 
         url = reverse(LABEL_DELETING, args=(self.label1.pk,))
@@ -94,8 +89,6 @@ class TestLabels(TestCase):
             Label.objects.get(pk=self.label1.pk)
 
     def test_label_in_use_deleting(self):
-        self.client.force_login(self.user)
-
         url = reverse(LABEL_DELETING, args=(self.label1.pk,))
         resp = self.client.post(url, follow=True)
 
