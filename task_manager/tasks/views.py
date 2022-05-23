@@ -21,14 +21,14 @@ TASKS = 'tasks'
 
 class TasksListView(CustomLoginRequiredMixin, FilterView):
     model = Task
-    template_name = 'tasks.html'
+    template_name = 'tasks/list.html'
     context_object_name = TASKS
     filterset_class = TaskFilter
 
 
 class TaskDetailsView(CustomLoginRequiredMixin, DetailView):
     model = Task
-    template_name = 'task_details.html'
+    template_name = 'tasks/details.html'
     context_object_name = TASK_DETAILS
 
 
@@ -37,9 +37,8 @@ class TaskCreationView(
     SuccessMessageMixin,
     CreateView
 ):
-    # model = Task
     form_class = TaskForm
-    template_name = 'create_task.html'
+    template_name = 'tasks/create.html'
     success_url = reverse_lazy(TASKS)
     success_message = SUCCESS_TASK_CREATION
 
@@ -55,7 +54,7 @@ class TaskUpdatingView(
 ):
     model = Task
     form_class = TaskForm
-    template_name = 'update_task.html'
+    template_name = 'tasks/update.html'
     success_url = reverse_lazy(TASKS)
     success_message = SUCCESS_TASK_UPDATING
 
@@ -66,12 +65,14 @@ class TaskDeletingView(
     DeleteView
 ):
     model = Task
-    template_name = 'delete_task.html'
+    template_name = 'tasks/delete.html'
     success_url = reverse_lazy(TASKS)
     success_message = SUCCESS_TASK_DELETING
 
-    def get(self, request, *args, **kwargs):
-        if request.user != self.get_object().author:
+    def form_valid(self, form):
+        if self.request.user != self.get_object().author:
             messages.error(self.request, NO_DELETE_PERMISSION_MESSAGE)
-            return redirect(TASKS)
-        return super().get(request, *args, **kwargs)
+        else:
+            super().form_valid(form)
+
+        return redirect(self.success_url)

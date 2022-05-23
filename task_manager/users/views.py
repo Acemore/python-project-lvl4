@@ -22,14 +22,13 @@ USER_IN_USE = _('Невозможно удалить пользователя, �
 
 class UserListView(ListView):
     model = User
-    template_name = 'users.html'
+    template_name = 'users/list.html'
     context_object_name = 'users'
 
 
 class UserCreationView(SuccessMessageMixin, CreateView):
-    # model = User
     form_class = CreateUserForm
-    template_name = 'create_user.html'
+    template_name = 'users/create.html'
     success_url = reverse_lazy('user_login')
     success_message = SUCCESS_USER_CREATION
 
@@ -40,22 +39,25 @@ class UserDeletingView(
     DeleteView
 ):
     model = User
-    template_name = 'delete_user.html'
+    template_name = 'users/delete.html'
     success_url = reverse_lazy('users')
     success_message = SUCCESS_USER_DELETING
+
+    def form_valid(self, form):
+        try:
+            self.object.delete()
+        except ProtectedError:
+            messages.error(self.request, USER_IN_USE)
+        else:
+            messages.success(self.request, self.success_message)
+
+        return redirect(self.success_url)
 
     def get(self, request, *args, **kwargs):
         if request.user != self.get_object():
             messages.error(self.request, NO_CHANGE_PERMISSION_MESSAGE)
             return redirect('users')
         return super().get(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        try:
-            return super().post(request, *args, **kwargs)
-        except ProtectedError:
-            messages.error(self.request, USER_IN_USE)
-            return redirect(self.success_url)
 
 
 class UserUpdatingView(
@@ -65,7 +67,7 @@ class UserUpdatingView(
 ):
     model = User
     form_class = CreateUserForm
-    template_name = 'update_user.html'
+    template_name = 'users/update.html'
     success_url = reverse_lazy('users')
     success_message = SUCCESS_USER_UPDATING
 
