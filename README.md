@@ -11,3 +11,39 @@
 **Task manager** is deployed on **Heroku**:
 
 https://acemore-task-manager.herokuapp.com/
+
+## To run **Task Manager**
+
+Clone repo:
+
+```bash
+git clone git@github.com:Acemore/python-project-lvl4.git
+```
+
+Create .env file in root dir and add local variables: 
+
+```
+ACCESS_TOKEN=<token from Rollbar error tracker>
+DEBUG=True
+SECRET_KEY=<your secret here there>
+```
+
+Install dependencies:
+
+```bash
+make install
+```
+
+Start migrations:
+
+```bash
+make migrate
+```
+
+Launch server with the app:
+
+```bash
+make run
+```
+
+Go to address http://localhost:8000/ or http://127.0.0.1:8000/

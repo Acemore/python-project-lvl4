@@ -1,5 +1,8 @@
 MANAGE := poetry run python manage.py
 
+install:
+	poetry install
+
 lint:
 	poetry run flake8 task_manager
 
@@ -24,4 +27,4 @@ test-coverage:
 	poetry run coverage xml
 	poetry run coverage report
 
-.PHONY: lint run test
+.PHONY: install lint run test
