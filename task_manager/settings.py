@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import dj_database_url
 import dotenv
 import os
-# import rollbar
 from pathlib import Path
 
 
@@ -73,8 +72,6 @@ ROLLBAR = {
     'environment': 'development' if DEBUG else 'production',
     'root': BASE_DIR,
 }
-
-# rollbar.init(**ROLLBAR)
 
 ROOT_URLCONF = 'task_manager.urls'
 
@@ -141,8 +138,6 @@ LANGUAGE_CODE = 'ru'
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
-
-# USE_L10N = True
 
 USE_TZ = True
 
