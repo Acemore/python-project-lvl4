@@ -34,7 +34,7 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
-    'acemore-task-manager.herokuapp.com',
+    'python-project-lvl4-production.up.railway.app',
     'localhost',
     'webserver',
 ]
