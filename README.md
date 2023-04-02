@@ -8,9 +8,7 @@
 
 ## Deployment
 
-**Task manager** is deployed on **Heroku**:
-
-https://acemore-task-manager.herokuapp.com/
+**Task manager** is deployed on [**Railway**](https://python-project-lvl4-production.up.railway.app/)
 
 ## To run **Task Manager**
 
