@@ -9,7 +9,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.8,<3.12"
+python = "^3.9,<3.12"
 Django = "4.0.4"
 gunicorn = "^20.1.0"
 python-dotenv = "^0.20.0"
@@ -18,6 +18,8 @@ django-bootstrap4 = "^22.1"
 psycopg2-binary = "^2.9.5"
 django-filter = "^21.1"
 rollbar = "^0.16.2"
+whitenoise = {extras = ["brotli"], version = "^6.8.2"}
+uvicorn = "^0.32.1"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^4.0.1"
