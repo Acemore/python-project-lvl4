@@ -34,7 +34,7 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
-    'python-project-lvl4-production.up.railway.app',
+    'task-manager-dhd0.onrender.com',
     'localhost',
     'webserver',
 ]
