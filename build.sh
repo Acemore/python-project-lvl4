@@ -2,7 +2,8 @@
 
 set -o errexit
 
-pip install -r requirements.txt
+pip install poetry
+poetry install
 
 python manage.py collectstatic --no-input
 
